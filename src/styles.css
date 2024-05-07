@@ -1,0 +1,77 @@
+.container {
+  max-width: 90%;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.input-group {
+  flex-direction: column; /* Cambiamos la dirección de la fila a columna */
+  align-items: flex-start;
+  /* Alineamos los elementos al principio */
+}
+.input-title {
+  width: auto; /* Ancho automático para los inputs */
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+.input-group label {
+  flex: 0 0 100%; /* Las etiquetas ocupan el ancho completo */
+  margin-bottom: 5px;
+  border: 1px solid #ccc; /* Define el borde con un color gris claro */
+  padding: 2px;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  border-radius: 3px;
+}
+
+.input-group input {
+  width: auto; /* Ancho automático para los inputs */
+  margin-right: 5px; /* Agregamos un margen derecho */
+}
+
+.result {
+  flex: 0 0 100%; /* El span ocupa el ancho completo */
+  margin-top: 5px; /* Añadimos un margen superior */
+}
+
+button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+@media only screen and (max-width: 600px) {
+  .container {
+    padding: 10px;
+  }
+
+  .input-group {
+    flex-wrap: wrap;
+  }
+
+  .input-group label {
+    flex: 0 0 100%;
+    margin-bottom: 5px;
+  }
+
+  .input-group input {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 5px;
+  }
+
+  .result {
+    flex: 0 0 100%;
+    text-align: left;
+    margin-bottom: 10px;
+  }
+}
