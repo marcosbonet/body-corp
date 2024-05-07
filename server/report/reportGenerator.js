@@ -12,7 +12,7 @@ const generatePDF = async (measurements) => {
       doc.moveDown();
       doc
         .fontSize(12)
-        .text(`Peso: ${measurements[measurements.length - 1].weight}`, {
+        .text(`Peso: ${measurements[measurements.length - 1].weight} kg`, {
           align: "center",
         });
 
@@ -24,7 +24,7 @@ const generatePDF = async (measurements) => {
         );
       });
       const valueAvg = sumOfFoldsData[sumOfFoldsData.length - 1];
-      doc.text(`Suma de Pliegues:: ${valueAvg}`, {
+      doc.text(`Suma de Pliegues:: ${valueAvg} cm`, {
         align: "center",
       });
       doc.moveDown();
@@ -45,7 +45,9 @@ const generatePDF = async (measurements) => {
         };
         doc
           .fontSize(12)
-          .text("Comparativa con la Medición Anterior:", { align: "center" });
+          .text("Comparativa con la ultima medicion de pliegues en cm:", {
+            align: "center",
+          });
         doc.text(`Iliac Crest: ${comparisonData.iliacCrest}`, {
           align: "center",
         });
@@ -57,19 +59,31 @@ const generatePDF = async (measurements) => {
       const muscleMassData = measurements.map(calculateMuscleMass);
       const roundedMuscleMass =
         muscleMassData[muscleMassData.length - 1].toFixed(2);
-      doc.text(`Masa muscular: ${roundedMuscleMass}`, {
+      doc.text(`Masa muscular: ${roundedMuscleMass} kg`, {
         align: "center",
       });
-      doc.moveDown();
+      if (measurements.length > 1) {
+        const lastMuscleMass = muscleMassData[muscleMassData.length - 1];
+        const prevMuscleMass = muscleMassData[muscleMassData.length - 2];
+        const muscleMassComparison = lastMuscleMass - prevMuscleMass;
+        doc
+          .fontSize(12)
+          .text("Comparativa con la ultima medicion de Masa Muscular en kg:", {
+            align: "center",
+          });
+        doc.text(` ${muscleMassComparison.toFixed(2)}`, {
+          align: "center",
+        });
+      }
       doc.image(weightCanvas, { align: "center" });
-      doc.moveDown(12);
+      doc.moveDown(13);
 
       const foldsCanvas = await createChartCanvas(
         sumOfFoldsData,
         "Evolución de la Suma de Pliegues"
       );
       doc.image(foldsCanvas, { align: "center" });
-      doc.moveDown(12);
+      doc.moveDown(13);
       const muscleMassCanvas = await createChartCanvas(
         muscleMassData,
         "Evolución de la Masa Muscular"

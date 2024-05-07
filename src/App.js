@@ -140,17 +140,7 @@ function App() {
           legAvg={legAvg}
         />
       ) : (
-        <Report
-          data={formData}
-          weightAvg={weightAvg}
-          heightAvg={heightAvg}
-          iliacCrestAvg={iliacCrestAvg}
-          supraSpinalAvg={supraSpinalAvg}
-          abdominalAvg={abdominalAvg}
-          thighAvg={thighAvg}
-          forearmAvg={forearmAvg}
-          legAvg={legAvg}
-        />
+        <Report />
       )}
     </div>
   );

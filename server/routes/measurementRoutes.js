@@ -5,7 +5,6 @@ import generatePDF from "../report/reportGenerator.js";
 const router = Router();
 
 router.post("/measurements", async (req, res) => {
-  console.log(req);
   try {
     const measurement = new Measurement(req.body);
     await measurement.save();
