@@ -35,6 +35,21 @@
   margin-top: 5px; /* Añadimos un margen superior */
 }
 
+.instruction-message {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  align-items: center;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 5px;
+  margin-left: 25rem;
+  z-index: 1; /* Para asegurarse de que esté por encima de los otros elementos */
+}
+
 button {
   padding: 10px 20px;
   background-color: #007bff;
@@ -43,9 +58,31 @@ button {
   border-radius: 5px;
   cursor: pointer;
   margin-top: 20px;
+  margin-left: 5px;
 }
-
-button:hover {
+.buttons {
+  display: inline-flex;
+}
+.buttonSubmit {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-right: 20px;
+}
+.buttonMicro {
+  background-color: white;
+  margin-right: 80px;
+  display: flex;
+  justify-content: flex-start;
+  margin-left: -12rem;
+}
+.buttonsMicro {
+  justify-content: flex-start;
+}
+.buttonMicro button:hover {
+  background-color: white;
+}
+.buttonSubmit:hover {
   background-color: #0056b3;
 }
 

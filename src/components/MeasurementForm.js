@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles.css";
 
 function MeasurementForm({
   formData,
   onInputChange,
   onSubmit,
+  setVoiceRecognitionActive,
+  handleVoiceCommand,
+  voiceRecognitionActive,
+  toggleFormValidation,
+  formValidationActive,
   weightAvg,
   heightAvg,
   iliacCrestAvg,
@@ -14,6 +19,53 @@ function MeasurementForm({
   forearmAvg,
   legAvg,
 }) {
+  const [recognition, setRecognition] = useState(null);
+
+  const startVoiceRecognition = () => {
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = "es-ES";
+    recognition.onstart = () => console.log("Voice recognition started");
+    recognition.onend = () => console.log("Voice recognition stopped");
+    recognition.onresult = (event) => {
+      const command = event.results[0][0].transcript;
+      console.log("Command:", command);
+      handleVoiceCommand(command);
+    };
+    setRecognition(recognition);
+    recognition.start();
+    setVoiceRecognitionActive(true);
+  };
+
+  const stopVoiceRecognition = () => {
+    if (recognition) {
+      recognition.stop();
+      setVoiceRecognitionActive(false);
+    }
+  };
+  const [focusedField, setFocusedField] = useState(null);
+  const [focusedMessage, setFocusedMessage] = useState(null);
+  const handleFocus = (fieldName, measurementType) => {
+    const measurementInstructions = {
+      supraSpinal1:
+        "Coloque la pinza a 1 cm a la derecha del punto medio del borde inferior de la escápula, en línea con el ángulo inferior del omóplato.",
+      abdominal1:
+        "Coloque la pinza a 2 cm a la derecha del ombligo, en línea horizontal con este.",
+      thigh1:
+        "Coloque la cinta métrica alrededor del muslo, en la parte más sobresaliente de los glúteos y las caderas, pasando por la parte superior de la rótula.",
+      forearm1:
+        "Coloque la cinta métrica alrededor del antebrazo, en el punto medio entre el codo y la muñeca.",
+      leg1: "Coloque la cinta métrica alrededor de la pierna, en el punto medio entre la rodilla y el tobillo.",
+    };
+    setFocusedField(fieldName);
+    setFocusedMessage(measurementInstructions[fieldName]);
+  };
+  const handleBlur = () => {
+    setFocusedField(null);
+    setFocusedMessage(null);
+  };
+
   return (
     <form onSubmit={onSubmit}>
       <div className="input-group">
@@ -47,7 +99,7 @@ function MeasurementForm({
       </div>
       <div className="input-group">
         <div className="input-title">
-          <label htmlFor="height1">Size (cm)</label>
+          <label htmlFor="height1">Talla (cm)</label>
         </div>
         <input
           type="number"
@@ -57,6 +109,7 @@ function MeasurementForm({
           step="0.1"
           required
         />
+
         <input
           type="number"
           name="height2"
@@ -75,7 +128,7 @@ function MeasurementForm({
       </div>
       <div className="input-group">
         <div className="input-title">
-          <label htmlFor="iliacCrest1">Iliac Crest (mm)</label>
+          <label htmlFor="iliacCrest1">Pliegue Cresta ilíaca (mm)</label>
         </div>
         <input
           type="number"
@@ -84,7 +137,12 @@ function MeasurementForm({
           onChange={onInputChange}
           step="0.1"
           required
+          onFocus={() => handleFocus("iliacCrest1")}
+          onBlur={handleBlur}
         />
+        {focusedField === "iliacCrest1" && (
+          <div className="instruction-message">{focusedMessage}</div>
+        )}
         <input
           type="number"
           name="iliacCrest2"
@@ -104,7 +162,7 @@ function MeasurementForm({
 
       <div className="input-group">
         <div className="input-title">
-          <label htmlFor="supraSpinal1">Supraespinal (mm)</label>
+          <label htmlFor="supraSpinal1">Pliegue Supraespinal (mm)</label>
         </div>
         <input
           type="number"
@@ -113,7 +171,12 @@ function MeasurementForm({
           onChange={onInputChange}
           step="0.1"
           required
+          onFocus={() => handleFocus("supraSpinal1")}
+          onBlur={handleBlur}
         />
+        {focusedField === "supraSpinal1" && (
+          <div className="instruction-message">{focusedMessage}</div>
+        )}
         <input
           type="number"
           name="supraSpinal2"
@@ -133,7 +196,7 @@ function MeasurementForm({
 
       <div className="input-group">
         <div className="input-title">
-          <label htmlFor="abdominal1">Abdominal (mm)</label>
+          <label htmlFor="abdominal1">Pliegue Abdominal (mm)</label>
         </div>
         <input
           type="number"
@@ -142,7 +205,12 @@ function MeasurementForm({
           onChange={onInputChange}
           step="0.1"
           required
+          onFocus={() => handleFocus("abdominal1")}
+          onBlur={handleBlur}
         />
+        {focusedField === "abdominal1" && (
+          <div className="instruction-message">{focusedMessage}</div>
+        )}
         <input
           type="number"
           name="abdominal2"
@@ -161,7 +229,7 @@ function MeasurementForm({
       </div>
       <div className="input-group">
         <div className="input-title">
-          <label htmlFor="thigh1">Thigh (cm)</label>
+          <label htmlFor="thigh1">Perímetro corregido muslo (cm)</label>
         </div>
         <input
           type="number"
@@ -170,7 +238,12 @@ function MeasurementForm({
           onChange={onInputChange}
           step="0.1"
           required
+          onFocus={() => handleFocus("thigh1")}
+          onBlur={handleBlur}
         />
+        {focusedField === "thigh1" && (
+          <div className="instruction-message">{focusedMessage}</div>
+        )}
         <input
           type="number"
           name="thigh2"
@@ -189,7 +262,7 @@ function MeasurementForm({
       </div>
       <div className="input-group">
         <div className="input-title">
-          <label htmlFor="forearm1">Forearm (cm)</label>
+          <label htmlFor="forearm1">Perímetro corregido antebrazo (cm)</label>
         </div>
         <input
           type="number"
@@ -198,7 +271,12 @@ function MeasurementForm({
           onChange={onInputChange}
           step="0.1"
           required
+          onFocus={() => handleFocus("forearm1")}
+          onBlur={handleBlur}
         />
+        {focusedField === "forearm1" && (
+          <div className="instruction-message">{focusedMessage}</div>
+        )}
         <input
           type="number"
           name="forearm2"
@@ -217,7 +295,7 @@ function MeasurementForm({
       </div>
       <div className="input-group">
         <div className="input-title">
-          <label htmlFor="leg1">Leg (cm)</label>
+          <label htmlFor="leg1">Perímetro corregido pierna (cm)</label>
         </div>
         <input
           type="number"
@@ -226,7 +304,12 @@ function MeasurementForm({
           onChange={onInputChange}
           step="0.1"
           required
+          onFocus={() => handleFocus("leg1")}
+          onBlur={handleBlur}
         />
+        {focusedField === "leg1" && (
+          <div className="instruction-message">{focusedMessage}</div>
+        )}
         <input
           type="number"
           name="leg2"
@@ -243,9 +326,35 @@ function MeasurementForm({
         />
         <span className="result">{legAvg} %</span>
       </div>
+      <div className="buttons">
+        <div className="buttonsMicro">
+          {voiceRecognitionActive ? (
+            <button className="buttonMicro" onClick={stopVoiceRecognition}>
+              <img
+                src="/nomicro.png"
+                alt="Mudo"
+                width="15px"
+                title="Detener reconocimiento de voz"
+              />
+            </button>
+          ) : (
+            <button className="buttonMicro" onClick={startVoiceRecognition}>
+              <img
+                src="/micro.png"
+                alt="Micrófono"
+                width="15px"
+                title="Comenzar reconocimiento de voz: diga nombre de medida y valor numerico"
+              />
+            </button>
+          )}
+        </div>
 
-      <button type="submit">Ver Informe</button>
+        <button className="buttonSubmit" type="submit">
+          Ver Informe
+        </button>
+      </div>
     </form>
   );
 }
+
 export default MeasurementForm;

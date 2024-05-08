@@ -32,6 +32,9 @@ function App() {
     leg3: "" || undefined,
   });
   const [showReport, setShowReport] = useState(false);
+  const [voiceRecognitionActive, setVoiceRecognitionActive] = useState(false);
+
+  const [formValidationActive, setFormValidationActive] = useState(true);
   const handleInputChange = async (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -55,7 +58,58 @@ function App() {
       console.error("Error al guardar los datos");
     }
   };
+  const handleVoiceCommand = (command) => {
+    const numberRegex = /\d+(?:\.\d+)?/;
 
+    const numberMatch = command.match(numberRegex);
+    if (numberMatch) {
+      const number = parseFloat(numberMatch[0]);
+
+      if (command.includes("peso")) {
+        const weightField = getAvailableField(formData, "weight");
+        setFormData({ ...formData, [weightField]: number });
+      } else if (command.includes("talla")) {
+        const heightField = getAvailableField(formData, "height");
+        setFormData({ ...formData, [heightField]: number });
+      } else if (command.includes("cresta iliaca")) {
+        const iliacCrestField = getAvailableField(formData, "iliacCrest");
+        setFormData({ ...formData, [iliacCrestField]: number });
+      } else if (command.includes("supraespinal")) {
+        const supraSpinalField = getAvailableField(formData, "supraSpinal");
+        setFormData({ ...formData, [supraSpinalField]: number });
+      } else if (command.includes("abdominal")) {
+        const abdominalField = getAvailableField(formData, "abdominal");
+        setFormData({ ...formData, [abdominalField]: number });
+      } else if (command.includes("muslo")) {
+        const thighField = getAvailableField(formData, "thigh");
+        setFormData({ ...formData, [thighField]: number });
+      } else if (command.includes("antebrazo")) {
+        const forearmField = getAvailableField(formData, "forearm");
+        setFormData({ ...formData, [forearmField]: number });
+      } else if (command.includes("pierna")) {
+        const legField = getAvailableField(formData, "leg");
+        setFormData({ ...formData, [legField]: number });
+      } else {
+        console.log("Comando no reconocido");
+      }
+    } else {
+      console.log("No se encontraron números en el comando");
+    }
+  };
+
+  const getAvailableField = (formData, fieldPrefix) => {
+    for (let i = 1; i <= 3; i++) {
+      const fieldName = `${fieldPrefix}${i}`;
+      if (!formData[fieldName]) {
+        return fieldName;
+      }
+    }
+
+    return `${fieldPrefix}1`;
+  };
+  const toggleFormValidation = (active) => {
+    setFormValidationActive(active);
+  };
   const weight =
     formData.weight2 === undefined && formData.weight3 === undefined
       ? parseFloat(formData.weight1)
@@ -130,6 +184,11 @@ function App() {
           formData={formData}
           onSubmit={handleSubmit}
           onInputChange={handleInputChange}
+          handleVoiceCommand={handleVoiceCommand}
+          voiceRecognitionActive={voiceRecognitionActive}
+          setVoiceRecognitionActive={setVoiceRecognitionActive}
+          toggleFormValidation={toggleFormValidation}
+          formValidationActive={formValidationActive}
           weightAvg={weightAvg}
           heightAvg={heightAvg}
           iliacCrestAvg={iliacCrestAvg}

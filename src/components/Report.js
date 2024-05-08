@@ -188,7 +188,7 @@ function Report() {
           <canvas id="muscleMassChart"></canvas>
         </div>
 
-        <button type="submit" onClick={handleDownload}>
+        <button className="buttonSubmit" type="submit" onClick={handleDownload}>
           Descargar Informe
         </button>
       </div>
